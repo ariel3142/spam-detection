@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deteksi Spam - FastAPI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Deteksi Pesan Email/SMS</h1>
+        <form method="post" class="form-card">
+            <textarea name="message" rows="5" placeholder="Masukkan pesan di sini"></textarea><br>
+            <button type="submit">Prediksi</button>
+        </form>
+        {% if result %}
+        <div class="result {% if 'SPAM' in result %}spam{% else %}ham{% endif %}">
+            {{ result }}
+        </div>
+        {% endif %}
+        <a href="/history" class="btn-history">Lihat Riwayat Prediksi</a>
+    </div>
+</body>
+</html>

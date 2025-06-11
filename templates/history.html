@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Prediksi - FastAPI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Riwayat Prediksi</h1>
+        {% if history %}
+        <table>
+            <tr>
+                <th>Pesan</th>
+                <th>Hasil</th>
+            </tr>
+            {% for row in history %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>Tidak ada riwayat prediksi.</p>
+        {% endif %}
+        <a href="/" class="btn-home">Kembali ke Halaman Utama</a>
+    </div>
+</body>
+</html>
