@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hasil Deteksi Spam - Flexy Admin</title>
+    <link rel="shortcut icon" type="image/png" href="/static/assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/static/assets/css/styles.min.css" />
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+
+        <!-- Topstrip -->
+        <div class="app-topstrip bg-dark py-6 px-3 w-100 d-lg-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-center gap-5 mb-2 mb-lg-0">
+                <button class="btn btn-outline-light me-3" id="sidebarToggleBtn" title="Toggle Sidebar">
+                    <i class="ti ti-menu-2 fs-5"></i>
+                </button>
+                <a class="d-flex justify-content-center" href="#">
+                    <img src="/static/assets/images/logos/logo-wrappixel.svg" alt="Logo" width="150">
+                </a>
+            </div>
+            <div class="d-lg-flex align-items-center gap-2">
+                <h3 class="text-white mb-2 mb-lg-0 fs-5 text-center">Hasil Prediksi Pesan Spam</h3>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="left-sidebar">
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a href="/" class="text-nowrap logo-img">
+                        <img src="/static/assets/images/logos/logo.svg" alt="" />
+                    </a>
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-6"></i>
+                    </div>
+                </div>
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                    <ul id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <iconify-icon icon="solar:menu-dots-linear" class="nav-small-cap-icon fs-4"></iconify-icon>
+                            <span class="hide-menu">Navigasi</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/" aria-expanded="false">
+                                <i class="ti ti-send"></i>
+                                <span class="hide-menu">Form Prediksi</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link active" href="/result" aria-expanded="false">
+                                <i class="ti ti-chart-pie"></i>
+                                <span class="hide-menu">Hasil Prediksi</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/history" aria-expanded="false">
+                                <i class="ti ti-history"></i>
+                                <span class="hide-menu">Riwayat</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Body -->
+        <div class="body-wrapper">
+            <div class="container-fluid py-4 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Hasil Prediksi Pesan</h4>
+
+                        {% if result %}
+                        <div class="alert {% if 'SPAM' in result %}alert-danger{% else %}alert-success{% endif %}"
+                            role="alert">
+                            <strong>Hasil:</strong> {{ result }}
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            {% if chart_path %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Distribusi SPAM vs HAM</h5>
+                                        <img src="{{ chart_path }}" alt="Pie Chart" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if bar_chart %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Bar Chart Jumlah Prediksi</h5>
+                                        <img src="{{ bar_chart }}" alt="Bar Chart" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if conf_chart %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Confidence Prediksi Terakhir</h5>
+                                        <img src="{{ conf_chart }}" alt="Confidence Chart" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if word_chart %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Top 10 Kata Paling Sering</h5>
+                                        <img src="{{ word_chart }}" alt="Word Freq Chart" class="img-fluid">
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <a href="/" class="btn btn-primary mt-3">Kembali ke Form</a>
+                        <a href="/history" class="btn btn-secondary mt-3">Lihat Riwayat</a>
+                        <a href="/clear-history" class="btn btn-danger mt-3"
+                            onclick="return confirm('Yakin ingin menghapus semua riwayat?')">
+                            Hapus Semua Riwayat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script>
+        const toggleBtn = document.getElementById('sidebarToggleBtn');
+        const mainWrapper = document.getElementById('main-wrapper');
+
+        if (toggleBtn && mainWrapper) {
+            toggleBtn.addEventListener('click', () => {
+                mainWrapper.classList.toggle('sidebar-collapsed');
+            });
+        }
+    </script>
+    <script src="/static/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/assets/js/sidebarmenu.js"></script>
+    <script src="/static/assets/js/app.min.js"></script>
+    <script src="/static/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/static/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/static/assets/js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+</body>
+
+</html>
